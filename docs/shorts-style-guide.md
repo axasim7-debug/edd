@@ -34,7 +34,7 @@
 2. `python3 tools/transcribe.py vo.wav > words.json` → توقيت كل كلمة.
 3. المشاهد تُبنى على توقيتات الكلمات (لا تقدير).
 4. صور أرشيفية من Wikimedia Commons عبر `tools/fetch_art.py` (يحفظ الرخص في credits.json).
-5. `tools/sfx.sh` لتوليد المؤثرات. رندر: `npx remotion render <Comp> out/<name>.mp4`.
+5. `tools/sfx.sh` لتوليد المؤثرات. رندر: `npx remotion render <Comp> out/<name>.mp4` ثم `tools/master.sh` لضبط الصوت على -14 LUFS.
 6. مراجعة فريمات مفتاحية قبل الرندر الكامل (الحواف، النصوص المقصوصة، أول فريم).
 
 ## 5. الحقوق
