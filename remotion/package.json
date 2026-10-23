@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "studio": "remotion studio",
-    "render:ain-jalut": "remotion render AinJalut out/ain-jalut.mp4",
-    "still:ain-jalut": "remotion still AinJalut out/frame.png --frame=45",
+    "render:enigma": "remotion render Enigma out/enigma.mp4",
+    "still:enigma": "remotion still Enigma out/frame.png --frame=45",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

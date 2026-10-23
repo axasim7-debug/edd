@@ -19,17 +19,26 @@ def api(**params):
     params.update(format='json')
     return json.loads(get('https://commons.wikimedia.org/w/api.php?' + urllib.parse.urlencode(params)))
 
+import os
 out = sys.argv[1]
-credits = {}
+cpath = f'{out}/credits.json'
+credits = json.load(open(cpath)) if os.path.exists(cpath) else {}
 for arg in sys.argv[2:]:
     name, query = arg.split('=', 1)
     hits = api(action='query', list='search', srnamespace=6, srlimit=5, srsearch=query)['query']['search']
-    title = next(h['title'] for h in hits if h['title'].lower().endswith(('.jpg', '.jpeg', '.png')))
-    info = api(action='query', titles=title, prop='imageinfo', iiprop='url|extmetadata', iiurlwidth=1000)
-    page = next(iter(info['query']['pages'].values()))['imageinfo'][0]
-    open(f'{out}/{name}.jpg', 'wb').write(get(page['thumburl']))
+    for h in hits:
+        title = h['title']
+        if not title.lower().endswith(('.jpg', '.jpeg', '.png')):
+            continue
+        info = api(action='query', titles=title, prop='imageinfo', iiprop='url|extmetadata', iiurlwidth=1000)
+        page = next(iter(info['query']['pages'].values()))['imageinfo'][0]
+        try:
+            open(f'{out}/{name}.jpg', 'wb').write(get(page['thumburl'].split('?')[0]))
+            break
+        except RuntimeError:
+            continue
     lic = page.get('extmetadata', {}).get('LicenseShortName', {}).get('value', '?')
     credits[name] = {'title': title, 'page': page['descriptionurl'], 'license': lic}
     print(name, '<-', title, '|', lic)
+    json.dump(credits, open(cpath, 'w'), indent=1, ensure_ascii=False)
     time.sleep(2)
-json.dump(credits, open(f'{out}/credits.json', 'w'), indent=1, ensure_ascii=False)

@@ -1,0 +1,37 @@
+{
+ "enigma": {
+  "title": "File:Enigma (crittografia) - Museo scienza e tecnologia Milano.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Enigma_(crittografia)_-_Museo_scienza_e_tecnologia_Milano.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ "rejewski": {
+  "title": "File:Marian Rejewski 1932 small.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Marian_Rejewski_1932_small.jpg",
+  "license": "CC BY-SA 2.5"
+ },
+ "turing": {
+  "title": "File:Alan Turing Aged 16.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Alan_Turing_Aged_16.jpg",
+  "license": "Public domain"
+ },
+ "bletchley": {
+  "title": "File:Bletchley Park Mansion.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Bletchley_Park_Mansion.jpg",
+  "license": "CC BY-SA 4.0"
+ },
+ "invasion": {
+  "title": "File:Bundesarchiv Bild 146-1979-056-18A, Polen, Schlagbaum, deutsche Soldaten.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_146-1979-056-18A,_Polen,_Schlagbaum,_deutsche_Soldaten.jpg",
+  "license": "CC BY-SA 3.0 de"
+ },
+ "zygalski": {
+  "title": "File:Henryk Zygalski.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Henryk_Zygalski.jpg",
+  "license": "Public domain"
+ },
+ "bombe": {
+  "title": "File:Bletchley Park Bombe 3.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Bletchley_Park_Bombe_3.jpg",
+  "license": "CC BY-SA 4.0"
+ }
+}
