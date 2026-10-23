@@ -10,6 +10,16 @@ import land10 from 'world-atlas/land-10m.json';
 export const W = 1080;
 export const H = 1920;
 
+// Vertical Shorts layout (YouTube UI covers the top ~220px, the bottom ~420px
+// and a ~130px column of buttons on the right).
+export const LAYOUT = {
+  safeLeft: 60,
+  safeRight: 930,
+  wordY: 250, // big word band: 250–400
+  cardY: 700, // card band centre: 440–960
+  focusY: 1200, // map focus band: 1000–1450
+};
+
 export const COLORS = {
   ocean: '#07111b',
   oceanLight: '#0f2133',
@@ -66,7 +76,7 @@ export const WorldMap: React.FC<{cam: Cam; borders?: FeatureCollection; children
       geoMercator()
         .center([cam.c[0], cam.c[1]])
         .scale(cam.z)
-        .translate([W / 2, H / 2])
+        .translate([W / 2, LAYOUT.focusY])
         .clipExtent([[-200, -200], [W + 200, H + 200]]),
     [cam.c[0], cam.c[1], cam.z],
   );

@@ -1,7 +1,7 @@
 import {Easing, interpolate, staticFile} from 'remotion';
 import type {Feature} from 'geojson';
 import {geoPath} from 'd3-geo';
-import {COLORS, project, ramp, useProjection, type LonLat} from './map';
+import {COLORS, LAYOUT, project, ramp, useProjection, type LonLat} from './map';
 
 const FONT = 'Inter Display, Inter, sans-serif';
 const MONO = 'JetBrains Mono, monospace';
@@ -35,47 +35,50 @@ export const Country: React.FC<{
   );
 };
 
+// Place pin: dot + label + coordinates. The label flips side automatically so it
+// never leaves the safe area.
 export const Pin: React.FC<{
   at: LonLat;
   label?: string;
   sub?: string;
+  coords?: boolean;
   color?: string;
   show: number;
   pulse?: number;
-  side?: 'left' | 'right';
   size?: number;
-}> = ({at, label, sub, color = COLORS.white, show, pulse = 0, side = 'right', size = 50}) => {
+  side?: 'left' | 'right';
+}> = ({at, label, sub, coords = true, color = COLORS.white, show, pulse = 0, size = 44, side}) => {
   const p = useProjection();
   if (show <= 0) return null;
   const [x, y] = project(p, at);
-  const s = side === 'right' ? 1 : -1;
-  const pop = interpolate(show, [0, 1], [0.4, 1], {easing: Easing.out(Easing.back(2))});
-  const coords = sub ?? `${at[1].toFixed(4)}° N, ${Math.abs(at[0]).toFixed(4)}° ${at[0] < 0 ? 'W' : 'E'}`;
+  const subText = sub ?? (coords ? `${at[1].toFixed(4)}° N, ${Math.abs(at[0]).toFixed(4)}° ${at[0] < 0 ? 'W' : 'E'}` : '');
+  const width = label ? Math.max(label.length * size * 0.66, subText.length * 21 * 0.62) + 64 : 0;
+  const fitsRight = x + width <= LAYOUT.safeRight;
+  const fitsLeft = x - width >= LAYOUT.safeLeft;
+  const s = side ? (side === 'right' ? 1 : -1) : fitsRight || !fitsLeft ? 1 : -1;
+  // Last resort: slide the whole label back inside the safe area.
+  const nudge = s === 1 ? Math.min(0, LAYOUT.safeRight - (x + width)) : Math.max(0, LAYOUT.safeLeft - (x - width));
+  const pop = interpolate(show, [0, 1], [0.5, 1], {easing: Easing.out(Easing.back(2))});
+  const anchor = s === 1 ? 'start' : 'end';
   return (
-    <g opacity={show} transform={`translate(${x} ${y}) scale(${pop})`}>
-      {pulse > 0 && pulse < 1 && <circle r={12 + pulse * 90} fill="none" stroke={color} strokeWidth={4} opacity={1 - pulse} />}
-      <circle r={20} fill="none" stroke={color} strokeWidth={4} opacity={0.6} />
-      <circle r={9} fill={color} filter="url(#glow)" />
+    <g opacity={show}>
+      <g transform={`translate(${x} ${y}) scale(${pop})`}>
+        {pulse > 0 && pulse < 1 && <circle r={12 + pulse * 90} fill="none" stroke={color} strokeWidth={4} opacity={1 - pulse} />}
+        <circle r={19} fill="none" stroke={color} strokeWidth={4} opacity={0.55} />
+        <circle r={9} fill={color} filter="url(#glow)" />
+      </g>
       {label && (
-        <>
-          <line x1={s * 14} y1={-14} x2={s * 44} y2={-44} stroke={color} strokeWidth={3} />
-          <line x1={s * 44} y1={-44} x2={s * (60 + label.length * size * 0.62)} y2={-44} stroke={color} strokeWidth={3} />
-          <text
-            x={s * 58}
-            y={-58}
-            fill={color}
-            fontFamily={FONT}
-            fontWeight={900}
-            fontSize={size}
-            textAnchor={side === 'right' ? 'start' : 'end'}
-            style={{letterSpacing: 1}}
-          >
+        <g transform={`translate(${x + nudge} ${y})`} opacity={ramp(show, 0.3, 1)}>
+          <polyline points={`${s * 14 - nudge},-14 ${s * 40},-40 ${s * (width - 10)},-40`} fill="none" stroke={color} strokeWidth={3} />
+          <text x={s * 50} y={-54} fill={color} fontFamily={FONT} fontWeight={900} fontSize={size} textAnchor={anchor} style={{letterSpacing: 1}}>
             {label.toUpperCase()}
           </text>
-          <text x={s * 58} y={-14} fill="rgba(255,255,255,0.7)" fontFamily={MONO} fontSize={21} textAnchor={side === 'right' ? 'start' : 'end'}>
-            {coords}
-          </text>
-        </>
+          {subText && (
+            <text x={s * 50} y={-12} fill="rgba(255,255,255,0.72)" fontFamily={MONO} fontSize={21} textAnchor={anchor}>
+              {subText}
+            </text>
+          )}
+        </g>
       )}
     </g>
   );
@@ -193,13 +196,28 @@ export const Signal: React.FC<{from: LonLat; to: LonLat; t: number; show: number
   );
 };
 
+// Card slots inside the card band — every photo lands in one of these.
+export const SLOT = {
+  center: {x: 540, y: LAYOUT.cardY},
+  left: {x: 300, y: LAYOUT.cardY},
+  right: {x: 780, y: LAYOUT.cardY},
+  trioL: {x: 245, y: LAYOUT.cardY + 20},
+  trioC: {x: 540, y: LAYOUT.cardY - 10},
+  trioR: {x: 835, y: LAYOUT.cardY + 20},
+} as const;
+export const SIZE = {
+  portrait: {w: 340, h: 430},
+  portraitL: {w: 400, h: 500},
+  small: {w: 240, h: 300},
+  landscape: {w: 640, h: 420},
+  half: {w: 400, h: 300},
+} as const;
+
 // Archival photo card with optional leader line to a place on the map.
 export const PhotoCard: React.FC<{
   src: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
+  slot: keyof typeof SLOT;
+  size: keyof typeof SIZE;
   show: number;
   rotate?: number;
   anchor?: LonLat;
@@ -207,39 +225,44 @@ export const PhotoCard: React.FC<{
   glow?: string;
   name?: string;
   cross?: number;
-}> = ({src, x, y, w, h, show, rotate = 0, anchor, gray = 0, glow, name, cross = 0}) => {
+}> = ({src, slot, size, show, rotate = 0, anchor, gray = 0, glow, name, cross = 0}) => {
   const p = useProjection();
   if (show <= 0) return null;
-  const s = interpolate(show, [0, 1], [0.6, 1], {easing: Easing.out(Easing.back(1.8))});
+  const {x, y} = SLOT[slot];
+  const {w, h} = SIZE[size];
+  const s = interpolate(show, [0, 1], [0.85, 1], {easing: Easing.out(Easing.back(1.4))});
+  const lift = (1 - show) * 60;
   const a = anchor ? project(p, anchor) : null;
   const id = `g${Math.round(gray * 100)}`;
-  const sat = 1 - gray;
+  const bottom = y + h / 2 + 12 + (name ? 50 : 0);
   return (
-    <g opacity={Math.min(1, show * 1.5)}>
+    <g opacity={Math.min(1, show * 1.4)}>
       <defs>
         <filter id={id}>
-          <feColorMatrix type="saturate" values={String(sat)} />
+          <feColorMatrix type="saturate" values={String(1 - gray)} />
         </filter>
         <filter id="cardshadow" x="-30%" y="-30%" width="160%" height="160%">
-          <feDropShadow dx="0" dy="18" stdDeviation="22" floodColor="#000" floodOpacity="0.7" />
+          <feDropShadow dx="0" dy="18" stdDeviation="22" floodColor="#000" floodOpacity="0.75" />
         </filter>
       </defs>
-      {a && <line x1={a[0]} y1={a[1]} x2={x} y2={y + h / 2} stroke="rgba(255,255,255,0.8)" strokeWidth={3} strokeDasharray={`${show * 2000} 2000`} />}
-      <g transform={`translate(${x} ${y}) rotate(${rotate}) scale(${s})`}>
-        {glow && <rect x={-w / 2 - 20} y={-h / 2 - 20} width={w + 40} height={h + 40} rx={18} fill={glow} filter="url(#softglow)" opacity={0.9} />}
-        <rect x={-w / 2 - 12} y={-h / 2 - 12} width={w + 24} height={h + 24 + (name ? 54 : 0)} rx={10} fill="#f4f1ea" filter="url(#cardshadow)" />
+      {a && a[1] > bottom + 40 && (
+        <g opacity={ramp(show, 0.5, 1)}>
+          <line x1={x} y1={bottom} x2={a[0]} y2={a[1] - 22} stroke="rgba(255,255,255,0.55)" strokeWidth={2.5} strokeDasharray="6 8" />
+        </g>
+      )}
+      <g transform={`translate(${x} ${y + lift}) rotate(${rotate}) scale(${s})`}>
+        {glow && <rect x={-w / 2 - 22} y={-h / 2 - 22} width={w + 44} height={h + 44 + (name ? 50 : 0)} rx={18} fill={glow} filter="url(#softglow)" opacity={0.85} />}
+        <rect x={-w / 2 - 12} y={-h / 2 - 12} width={w + 24} height={h + 24 + (name ? 50 : 0)} rx={8} fill="#f3efe6" filter="url(#cardshadow)" />
         <image href={staticFile(src)} x={-w / 2} y={-h / 2} width={w} height={h} preserveAspectRatio="xMidYMid slice" filter={`url(#${id})`} />
         {name && (
-          <text x={0} y={h / 2 + 46} textAnchor="middle" fontFamily={FONT} fontWeight={800} fontSize={34} fill="#1a1a1a">
+          <text x={0} y={h / 2 + 42} textAnchor="middle" fontFamily={FONT} fontWeight={800} fontSize={Math.min(32, (w + 10) / (name.length * 0.62))} fill="#1a1a1a" style={{letterSpacing: 1}}>
             {name}
           </text>
         )}
         {cross > 0 && (
-          <g stroke={COLORS.red} strokeWidth={18} strokeLinecap="round" filter="url(#glow)">
-            <line x1={-w / 2 + 20} y1={-h / 2 + 20} x2={-w / 2 + 20 + (w - 40) * Math.min(1, cross * 2)} y2={-h / 2 + 20 + (h - 40) * Math.min(1, cross * 2)} />
-            {cross > 0.5 && (
-              <line x1={w / 2 - 20} y1={-h / 2 + 20} x2={w / 2 - 20 - (w - 40) * (cross * 2 - 1)} y2={-h / 2 + 20 + (h - 40) * (cross * 2 - 1)} />
-            )}
+          <g stroke={COLORS.red} strokeWidth={16} strokeLinecap="round" filter="url(#glow)">
+            <line x1={-w / 2 + 24} y1={-h / 2 + 24} x2={-w / 2 + 24 + (w - 48) * Math.min(1, cross * 2)} y2={-h / 2 + 24 + (h - 48) * Math.min(1, cross * 2)} />
+            {cross > 0.5 && <line x1={w / 2 - 24} y1={-h / 2 + 24} x2={w / 2 - 24 - (w - 48) * (cross * 2 - 1)} y2={-h / 2 + 24 + (h - 48) * (cross * 2 - 1)} />}
           </g>
         )}
       </g>
@@ -251,23 +274,26 @@ export const PhotoCard: React.FC<{
 export const BigWord: React.FC<{text: string; show: number; y?: number; size?: number; color?: string}> = ({
   text,
   show,
-  y = 520,
-  size = 150,
+  y = LAYOUT.wordY,
+  size = 120,
   color = COLORS.white,
 }) => {
   if (show <= 0) return null;
-  const s = interpolate(show, [0, 1], [1.35, 1], {easing: Easing.out(Easing.cubic)});
+  const s = interpolate(show, [0, 1], [1.2, 1], {easing: Easing.out(Easing.cubic)});
+  // Never wider than the safe area.
+  const fs = Math.min(size, 900 / (text.length * 0.64));
   return (
     <div
       style={{
         position: 'absolute',
-        left: 0,
-        right: 0,
-        top: y,
+        left: 90,
+        width: 900,
+        top: y + (size - fs) / 2,
         textAlign: 'center',
         fontFamily: FONT,
         fontWeight: 900,
-        fontSize: size,
+        fontSize: fs,
+        lineHeight: 1,
         letterSpacing: 2,
         color,
         opacity: show,
@@ -281,14 +307,14 @@ export const BigWord: React.FC<{text: string; show: number; y?: number; size?: n
 };
 
 // Rotor wiring diagram: 26 contacts on each side, wires drawn one by one.
-export const Wiring: React.FC<{progress: number; show: number; x: number; y: number}> = ({progress, show, x, y}) => {
+export const Wiring: React.FC<{progress: number; show: number; x: number; y: number; scale?: number}> = ({progress, show, x, y, scale = 1}) => {
   if (show <= 0) return null;
   // Wiring of the historical Enigma I rotor I: EKMFLGDQVZNTOWYHXUSPAIBRCJ.
   const map = 'EKMFLGDQVZNTOWYHXUSPAIBRCJ';
   const gap = 34;
   const top = -12.5 * gap;
   return (
-    <g opacity={show} transform={`translate(${x} ${y})`}>
+    <g opacity={show} transform={`translate(${x} ${y}) scale(${scale})`}>
       <rect x={-300} y={top - 60} width={600} height={26 * gap + 90} rx={24} fill="rgba(7,17,27,0.82)" stroke="rgba(63,180,255,0.5)" strokeWidth={3} />
       {Array.from({length: 26}, (_, i) => {
         const j = map.charCodeAt(i) - 65;
