@@ -2,20 +2,33 @@
 
 **Myth:** Alan Turing broke Enigma. **Truth:** Polish mathematicians broke it in 1932 and handed everything to Britain and France five weeks before the invasion of Poland.
 
-## Script (~64s)
+## Script (~62s, v2 — harder hook)
 
-| Time | Voiceover |
-|---|---|
-| 0–3 | Alan Turing did not break Enigma first. Poland did… seven years before the war. |
-| 3–7 | December 1932. Warsaw. A twenty-seven-year-old mathematician, Marian Rejewski, is given an impossible task. |
-| 7–12 | Germany's Enigma machine has billions of possible settings. Everyone believes it can't be broken. |
-| 12–20 | Rejewski doesn't guess. Using pure mathematics, and a few pages stolen by a French spy, he rebuilds Enigma's secret wiring… without ever seeing the machine. |
-| 20–27 | For years, Poland reads Germany's secret messages. Then Germany makes Enigma harder… and the Poles realize war is coming. |
-| 27–36 | July 1939. In a forest outside Warsaw, they meet British and French codebreakers… and hand them everything. Their methods. Their machines. Even copies of Enigma. |
-| 36–40 | Five weeks later… Germany invades Poland. |
-| 40–49 | The Polish team escapes through Romania to France, and keeps breaking codes. In Britain, at Bletchley Park, Alan Turing builds on their work, and breaks Enigma on a massive scale. |
-| 49–57 | Turing became a legend. Rejewski? He was never allowed inside Bletchley Park. After the war, he went home… and worked as an office clerk. In silence. |
-| 57–64 | The machine that helped win the war… was first broken by a man the world forgot. |
+Hollywood lied to you. Alan Turing did NOT break Enigma first.
+
+Three Polish mathematicians did. Seven years before the war.
+
+1932. Germany's Enigma has billions of settings. Every army on Earth thinks it's unbreakable.
+
+Then a 27-year-old Pole named Marian Rejewski breaks it. With pure math. Without ever touching the machine.
+
+For years, Poland secretly reads Hitler's messages.
+
+Then Germany makes Enigma harder. And the Poles know what that means. War is coming.
+
+July 1939. A forest outside Warsaw. They call in British and French codebreakers… and give them everything. The methods. The machines. Even copies of Enigma itself.
+
+The British couldn't believe it.
+
+Five weeks later, Germany invades Poland.
+
+The Polish team escapes through Romania to France, and keeps breaking codes. In Britain, Alan Turing takes their work and turns it into a machine that cracks Enigma on a massive scale.
+
+Turing became a legend. Rejewski was never even allowed inside Bletchley Park.
+
+After the war, he went home… and spent years as an office clerk. Silent.
+
+The man who broke Enigma first… and the world forgot his name.
 
 ## Visual direction
 Dark but real: NASA / Sentinel-2 satellite imagery graded to night tones, real terrain and coastlines, real 1939 borders as glowing lines, dashed glowing routes, archival photos as tilted cards. On-screen text limited to place names and one or two key words.
