@@ -1,0 +1,24 @@
+{
+  "name": "edd-shorts",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio",
+    "render:ain-jalut": "remotion render AinJalut out/ain-jalut.mp4",
+    "still:ain-jalut": "remotion still AinJalut out/frame.png --frame=45",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.242",
+    "@types/d3-geo": "3.1.0",
+    "@types/react": "18.3.12",
+    "@types/topojson-client": "3.1.5",
+    "@types/topojson-specification": "^1.0.5",
+    "d3-geo": "3.1.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.242",
+    "topojson-client": "3.1.0",
+    "typescript": "5.6.3",
+    "world-atlas": "2.0.2"
+  }
+}
