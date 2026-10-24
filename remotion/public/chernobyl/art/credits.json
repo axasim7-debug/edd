@@ -1,0 +1,32 @@
+{
+ "reactor": {
+  "title": "File:IAEA 02790015 (5613115146).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:IAEA_02790015_(5613115146).jpg",
+  "license": "CC BY-SA 2.0"
+ },
+ "spot": {
+  "title": "File:SPOT-1-1986-05-01-Tchernobyl-PAN.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:SPOT-1-1986-05-01-Tchernobyl-PAN.jpg",
+  "license": "Licence Ouverte"
+ },
+ "landsat": {
+  "title": "File:Landsat 5 images of Chernobyl (1986).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Landsat_5_images_of_Chernobyl_(1986).jpg",
+  "license": "Public domain"
+ },
+ "pripyat": {
+  "title": "File:Pripyat (02710024).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Pripyat_(02710024).jpg",
+  "license": "CC BY-SA 2.0"
+ },
+ "bridgeview": {
+  "title": "File:The dangerous view - Pripyat - Chernobyl.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:The_dangerous_view_-_Pripyat_-_Chernobyl.jpg",
+  "license": "CC BY 2.0"
+ },
+ "medal": {
+  "title": "File:Chernobyl Liquidators Medal.png",
+  "page": "https://commons.wikimedia.org/wiki/File:Chernobyl_Liquidators_Medal.png",
+  "license": "CC BY-SA 4.0"
+ }
+}

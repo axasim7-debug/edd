@@ -25,7 +25,8 @@ cpath = f'{out}/credits.json'
 credits = json.load(open(cpath)) if os.path.exists(cpath) else {}
 for arg in sys.argv[2:]:
     name, query = arg.split('=', 1)
-    hits = api(action='query', list='search', srnamespace=6, srlimit=5, srsearch=query)['query']['search']
+    # An exact 'File:...' title skips the search.
+    hits = [{'title': query}] if query.startswith('File:') else api(action='query', list='search', srnamespace=6, srlimit=5, srsearch=query)['query']['search']
     for h in hits:
         title = h['title']
         if not title.lower().endswith(('.jpg', '.jpeg', '.png')):

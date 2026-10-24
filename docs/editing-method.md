@@ -43,11 +43,13 @@ python3 tools/transcribe.py public/<slug>/vo.wav > src/shorts/<slug>/words.json
 
 ## 4. المواد
 - **الخريطة:** Natural Earth (`world-atlas` 50m/10m) + **حدود السنة الحقيقية** من aourednik/historical-basemaps عبر `python3 tools/prepare_borders.py <year> <w> <s> <e> <n> <out.json>`. لا أشكال مرسومة باليد أبدًا.
+- **جغرافيا محلية دقيقة (مدينة/موقع):** `curl "https://api.openstreetmap.org/api/0.6/map?bbox=W,S,E,N" > area.osm` ثم `python3 tools/osm_extract.py area.osm out.json` (مبانٍ، طرق، سكك، ماء، غابات). Overpass محجوب من البيئة السحابية؛ واجهة OSM الرئيسية تعمل لمساحات صغيرة. احذف المنشآت اللاحقة للحدث (مثال: إزالة New Safe Confinement من خريطة 1986). اسم المكان من OSM يثبت الموقع (مثال: عقدة "Bridge of Death"). الإسناد: © OpenStreetMap contributors (ODbL).
+- **أنهار/بحيرات إقليمية:** Natural Earth 10m من `raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/` مع قصّها للمنطقة.
 - **الصور الأرشيفية:** `python3 tools/fetch_art.py public/<slug>/art "name=search terms" ...` — يحفظ الرخصة في `credits.json`. CC BY-SA تُذكر في الوصف.
 - **الخطوط:** Special Elite (آلة كاتبة)، Caveat (خط يد)، Playfair (عناوين)، Inter (الأسلوب الداكن) — كلها OFL/Apache في `public/fonts`.
 
 ## 5. بناء المشاهد (الأسلوب A-Paper)
-انسخ `src/shorts/enigma/Enigma.tsx` كقالب وسجّل `<Comp theme="paper" />` في `Root.tsx`.
+انسخ `src/shorts/chernobyl/Chernobyl.tsx` كقالب (أحدث نسخة: فريم أول بعنوان ورقي + ختم، طبقات OSM، بطاقات نص بالآلة الكاتبة، ملاحظات بخط اليد) أو `src/shorts/enigma/Enigma.tsx` وسجّل `<Comp theme="paper" />` في `Root.tsx`.
 
 ### 5.1 نظام الأحزمة (إلزامي)
 | الحزام | y | المحتوى |
