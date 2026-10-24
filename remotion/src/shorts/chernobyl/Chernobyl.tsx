@@ -7,7 +7,7 @@ import type {Feature, FeatureCollection} from 'geojson';
 import {WorldMap, cameraAt, project, ramp, useProjection, useSeconds, window_, type CamKey, type LonLat} from '../../lib/map';
 import {PhotoCard, Pin, pulseAt} from '../../lib/overlays';
 import {INK, Lighting, Note, Paper, SERIF, Stamp, TYPE, Typed} from '../../lib/paper';
-import {SfxTrack, typing, type Cue} from '../../lib/sfx';
+import {SfxTrack, type Cue} from '../../lib/sfx';
 import osm from './data/pripyat_osm.json';
 import neRivers from './data/ne_rivers.json';
 import neLakes from './data/ne_lakes.json';
@@ -225,15 +225,15 @@ const DateCard: React.FC<{t: number}> = ({t}) => {
 
 const SFX: Cue[] = [
   [2.98, 'stamp', 0.6],
-  [4.8, 'air', 0.25], ...typing(5.24, 21, 16, 0.3),
+  [4.8, 'air', 0.25], [5.24, 'ink', 0.22],
   [7.9, 'paper2', 0.35], [8.16, 'impact', 0.35],
   [9.9, 'air', 0.2], [10.4, 'string', 0.2],
-  [13.6, 'paper1', 0.35], ...typing(15.9, 48, 28, 0.22),
-  [18.8, 'paper2', 0.32], ...typing(19.2, 17, 17, 0.25),
+  [13.6, 'paper1', 0.35], [15.9, 'ink', 0.2], [16.8, 'ink', 0.16],
+  [18.8, 'paper2', 0.32], [19.2, 'ink', 0.2],
   [24.1, 'impact', 0.45], [24.12, 'stamp', 0.6],
-  [25.4, 'string', 0.15], [28.36, 'paper1', 0.32],
+  [25.4, 'string', 0.15], [26.0, 'ink', 0.2], [28.36, 'paper1', 0.32], [29.6, 'ink', 0.2],
   [31.48, 'paper2', 0.32],
-  [34.2, 'string', 0.2],
+  [34.2, 'string', 0.2], [35.6, 'ink', 0.22],
   [36.9, 'air', 0.2],
 ];
 

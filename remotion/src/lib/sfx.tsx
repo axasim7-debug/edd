@@ -1,9 +1,10 @@
 import {Audio, Sequence, staticFile, useVideoConfig} from 'remotion';
 
-export type SfxName = 'paper1' | 'paper2' | 'tap' | 'pin' | 'key' | 'ratchet' | 'stamp' | 'impact' | 'string' | 'air' | 'door';
+export type SfxName = 'ink' | 'paper1' | 'paper2' | 'tap' | 'pin' | 'key' | 'ratchet' | 'stamp' | 'impact' | 'string' | 'air' | 'door';
 export type Cue = [t: number, name: SfxName, volume?: number];
 
 const LENGTH: Record<SfxName, number> = {
+  ink: 1.35,
   paper1: 0.5, paper2: 0.7, tap: 0.2, pin: 0.25, key: 0.1, ratchet: 0.3, stamp: 0.3, impact: 1.7, string: 0.55, air: 0.85, door: 1.0,
 };
 

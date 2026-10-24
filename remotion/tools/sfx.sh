@@ -27,3 +27,6 @@ gen -f lavfi -i "anoisesrc=d=0.8:c=pink:a=0.6:s=31" -af "highpass=f=300,lowpass=
 # Heavy door / panel closing.
 gen -f lavfi -i "sine=f=70:d=0.9" -f lavfi -i "anoisesrc=d=0.3:c=brown:a=1:s=41" -filter_complex "[0]afade=t=out:d=0.9:curve=exp,volume=1.4[a];[1]lowpass=f=1200,afade=t=out:d=0.3,volume=1[b];[a][b]amix=inputs=2:normalize=0" -ar 48000 -ac 2 "$out/door.wav"
 ls "$out"
+# Soft pen on paper: gentle band-passed noise with slow stroke modulation.
+# Replaces typewriter keys (the owner found them harsh and loud).
+gen -f lavfi -i "anoisesrc=d=1.3:c=pink:a=0.6:s=53" -af "bandpass=f=3200:w=2600,tremolo=f=7:d=0.55,afade=t=in:d=0.25,afade=t=out:st=0.8:d=0.5,lowpass=f=6000,volume=0.55" -ar 48000 -ac 2 "$out/ink.wav"
