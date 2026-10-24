@@ -1,0 +1,5 @@
+# Python helpers in tools/ (transcription, assets, textures)
+faster-whisper==1.1.1
+numpy
+pillow
+yt-dlp

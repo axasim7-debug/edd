@@ -1,6 +1,14 @@
 # YouTube title / description
 
-**Title:** Hollywood Lied: Turing Didn't Break Enigma First #history #ww2 #didyouknow
+**Title (chosen):** Turing Didn't Break Enigma First — Poland Did #history #ww2 #didyouknow
+
+Alternatives:
+1. Hollywood Lied: Poland Broke Enigma 7 Years Before Turing
+2. The Man Who Really Broke Enigma (It Wasn't Turing)
+3. Why Poland Gave Britain the Enigma Secret 5 Weeks Before WW2
+4. The Forgotten Genius Who Broke Enigma First
+
+Tags: #history #ww2 #didyouknow #enigma
 
 **Description:**
 Everyone thinks Alan Turing broke Enigma. Three Polish mathematicians did it first — in 1932 — and handed everything to Britain five weeks before the war.
