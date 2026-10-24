@@ -3,11 +3,36 @@ import type {Feature, FeatureCollection} from 'geojson';
 import {COLORS, WorldMap, cameraAt, project, ramp, useProjection, useSeconds, window_, type CamKey, type LonLat} from '../../lib/map';
 import {Arrow, Country, Flash, Grain, PhotoCard, Pin, Route, Signal, Vignette, Wiring, pulseAt, shake} from '../../lib/overlays';
 import europe1938 from './data/europe_1938.json';
+import {SfxTrack, type Cue} from '../../lib/sfx';
 
 // Layout rule: big word on top, photo cards in the band below it, and every
 // map focus point in the lower band (see LAYOUT in lib/map.tsx).
 // Every time below comes from the voiceover word timestamps (words.json).
 export const DURATION = 74.2;
+
+// Sound cues: tactile sounds on contact, low impact only on real revelations,
+// silence on "War is coming" and "Silent.".
+const SFX: Cue[] = [
+  [2.55, 'impact', 0.45],
+  [3.9, 'air', 0.22],
+  [4.76, 'paper1', 0.3], [5.1, 'paper2', 0.3], [5.45, 'paper1', 0.3],
+  [9.72, 'paper2', 0.32],
+  [12.4, 'air', 0.22],
+  [15.0, 'air', 0.18], [16.85, 'paper1', 0.3], [17.6, 'paper2', 0.28],
+  [18.3, 'impact', 0.5],
+  [19.0, 'ratchet', 0.25], [20.1, 'ratchet', 0.2],
+  [22.0, 'air', 0.18],
+  [25.9, 'paper2', 0.3], [26.05, 'ratchet', 0.4], [26.45, 'ratchet', 0.35],
+  [31.5, 'air', 0.2], [33.3, 'pin', 0.45],
+  [35.6, 'air', 0.2], [36.0, 'string', 0.28], [36.5, 'string', 0.25], [38.5, 'string', 0.3],
+  [41.7, 'paper2', 0.32],
+  [43.6, 'air', 0.18],
+  [46.66, 'impact', 0.6], [46.9, 'paper1', 0.3],
+  [48.5, 'air', 0.2], [48.7, 'string', 0.25],
+  [53.2, 'air', 0.2], [53.3, 'paper1', 0.3], [53.9, 'paper2', 0.3], [56.1, 'paper1', 0.3],
+  [61.1, 'paper1', 0.3], [62.8, 'impact', 0.38],
+  [64.4, 'air', 0.18], [65.5, 'paper2', 0.3],
+];
 
 const BORDERS = europe1938 as unknown as FeatureCollection;
 const POLAND = BORDERS.features.find((f) => f.properties?.name === 'Poland') as Feature;
@@ -177,6 +202,7 @@ export const Enigma: React.FC = () => {
       <Grain frame={frame} />
 
       <Audio src={staticFile('enigma/vo.wav')} />
+      <SfxTrack cues={SFX} />
     </AbsoluteFill>
   );
 };

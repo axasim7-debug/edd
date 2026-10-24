@@ -119,7 +119,6 @@ export const Route: React.FC<{
   const tip = drawn[drawn.length - 1];
   return (
     <g opacity={opacity}>
-      <path d={d} fill="none" stroke={color} strokeWidth={width + 8} opacity={0.18} strokeLinecap="round" />
       <path
         d={d}
         fill="none"
@@ -251,8 +250,8 @@ export const PhotoCard: React.FC<{
         </g>
       )}
       <g transform={`translate(${x} ${y + lift}) rotate(${rotate}) scale(${s})`}>
-        {glow && <rect x={-w / 2 - 22} y={-h / 2 - 22} width={w + 44} height={h + 44 + (name ? 50 : 0)} rx={18} fill={glow} filter="url(#softglow)" opacity={0.85} />}
-        <rect x={-w / 2 - 12} y={-h / 2 - 12} width={w + 24} height={h + 24 + (name ? 50 : 0)} rx={8} fill="#f3efe6" filter="url(#cardshadow)" />
+        {glow && <rect x={-w / 2 - 20} y={-h / 2 - 20} width={w + 40} height={h + 40 + (name ? 50 : 0)} rx={12} fill={glow} />}
+        <rect x={-w / 2 - 12} y={-h / 2 - 12} width={w + 24} height={h + 24 + (name ? 50 : 0)} rx={8} fill="#E8DDC5" filter="url(#cardshadow)" />
         <image href={staticFile(src)} x={-w / 2} y={-h / 2} width={w} height={h} preserveAspectRatio="xMidYMid slice" filter={`url(#${id})`} />
         {name && (
           <text x={0} y={h / 2 + 42} textAnchor="middle" fontFamily={FONT} fontWeight={800} fontSize={Math.min(32, (w + 10) / (name.length * 0.62))} fill="#1a1a1a" style={{letterSpacing: 1}}>
@@ -298,7 +297,7 @@ export const BigWord: React.FC<{text: string; show: number; y?: number; size?: n
         color,
         opacity: show,
         transform: `scale(${s})`,
-        textShadow: `0 0 40px ${color === COLORS.white ? 'rgba(0,0,0,0.9)' : color}, 0 8px 30px rgba(0,0,0,0.9)`,
+        textShadow: '0 6px 24px rgba(0,0,0,0.85)',
       }}
     >
       {text}

@@ -20,18 +20,19 @@ export const LAYOUT = {
   focusY: 1200, // map focus band: 1000–1450
 };
 
+// Restrained archival palette (docs/paper-documentary-master-prompt.md §2.2).
 export const COLORS = {
-  ocean: '#07111b',
-  oceanLight: '#0f2133',
-  land: '#17232d',
-  landLight: '#1f2f3b',
-  coast: 'rgba(120, 200, 255, 0.45)',
-  border: 'rgba(210, 225, 235, 0.16)',
-  grid: 'rgba(120, 170, 210, 0.07)',
-  red: '#ff3b4a',
-  blue: '#3fb4ff',
-  gold: '#ffc94a',
-  white: '#ffffff',
+  ocean: '#121413',
+  oceanLight: '#1a1c1a',
+  land: '#22231f',
+  landLight: '#2a2a25',
+  coast: 'rgba(213, 196, 161, 0.5)',
+  border: 'rgba(213, 196, 161, 0.16)',
+  grid: 'rgba(213, 196, 161, 0.05)',
+  red: '#A43B32',
+  blue: '#77736C',
+  gold: '#AD9163',
+  white: '#E8DDC5',
 };
 
 type LandTopo = Topology<{land: GeometryCollection}>;
@@ -94,10 +95,8 @@ export const WorldMap: React.FC<{cam: Cam; borders?: FeatureCollection; children
             <stop offset="0%" stopColor={COLORS.landLight} />
             <stop offset="100%" stopColor={COLORS.land} />
           </linearGradient>
-          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="7" result="b" />
+          <filter id="glow">
             <feMerge>
-              <feMergeNode in="b" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
@@ -105,17 +104,16 @@ export const WorldMap: React.FC<{cam: Cam; borders?: FeatureCollection; children
             <feGaussianBlur stdDeviation="14" />
           </filter>
           <pattern id="hatch-red" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <rect width="16" height="16" fill="rgba(255,59,74,0.22)" />
-            <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(255,120,130,0.45)" strokeWidth="4" />
+            <rect width="16" height="16" fill="rgba(164,59,50,0.30)" />
+            <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(164,59,50,0.55)" strokeWidth="4" />
           </pattern>
           <pattern id="hatch-white" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <rect width="16" height="16" fill="rgba(255,255,255,0.10)" />
-            <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(255,255,255,0.30)" strokeWidth="4" />
+            <rect width="16" height="16" fill="rgba(232,221,197,0.07)" />
+            <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(232,221,197,0.22)" strokeWidth="4" />
           </pattern>
         </defs>
         <rect width={W} height={H} fill="url(#ocean)" />
         <path d={path(GRATICULE) ?? ''} fill="none" stroke={COLORS.grid} strokeWidth={1.5} />
-        <path d={landD} fill={COLORS.coast} filter="url(#softglow)" opacity={0.35} />
         <path d={landD} fill="url(#land)" stroke={COLORS.coast} strokeWidth={1.6} />
         {borders && <path d={path(borders) ?? ''} fill="none" stroke={COLORS.border} strokeWidth={1.4} />}
         {children}

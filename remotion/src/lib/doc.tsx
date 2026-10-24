@@ -70,8 +70,8 @@ export const Panel: React.FC<{
         transform: `scale(${enter}) rotate(${rotate}deg)`,
         borderRadius: 18,
         overflow: 'hidden',
-        boxShadow: `0 40px 120px rgba(0,0,0,0.8)${glow ? `, 0 0 90px ${glow}` : ''}`,
-        outline: glow ? `4px solid ${glow}` : '2px solid rgba(255,255,255,0.18)',
+        boxShadow: '0 40px 120px rgba(0,0,0,0.8)',
+        outline: glow ? `6px solid ${glow}` : '2px solid rgba(232,221,197,0.18)',
       }}
     >
       {img()}
@@ -88,7 +88,7 @@ export const Panel: React.FC<{
                 right: 0,
                 top: `${s * 100}%`,
                 height: 26 + i * 6,
-                background: i % 2 ? 'rgba(255,59,74,0.55)' : 'rgba(255,255,255,0.25)',
+                background: i % 2 ? 'rgba(164,59,50,0.55)' : 'rgba(232,221,197,0.25)',
                 transform: `translateX(${(i % 2 ? 1 : -1) * 60 * glitch}px)`,
                 mixBlendMode: 'overlay',
               }}
@@ -160,16 +160,9 @@ export const EnigmaMachine: React.FC<{
           <stop offset="50%" stopColor="#d8cfb8" />
           <stop offset="100%" stopColor="#3b3326" />
         </linearGradient>
-        <filter id="lampglow" x="-100%" y="-100%" width="300%" height="300%">
-          <feGaussianBlur stdDeviation="14" result="b" />
-          <feMerge>
-            <feMergeNode in="b" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
       </defs>
       <g transform={`translate(540 ${y}) scale(${scale * interpolate(show, [0, 1], [0.92, 1])})`}>
-        <rect x={-470} y={-430} width={940} height={860} rx={36} fill="url(#body)" stroke={danger > 0 ? `rgba(255,59,74,${0.3 + 0.6 * danger})` : 'rgba(255,255,255,0.12)'} strokeWidth={4} />
+        <rect x={-470} y={-430} width={940} height={860} rx={36} fill="url(#body)" stroke={danger > 0 ? `rgba(164,59,50,${0.3 + 0.6 * danger})` : 'rgba(232,221,197,0.12)'} strokeWidth={4} />
         {/* rotor windows */}
         {Array.from({length: n}, (_, i) => {
           const extra = i >= 3 ? Math.min(1, rotors - i) : 1;
@@ -206,8 +199,8 @@ export const EnigmaMachine: React.FC<{
             const on = lit === ch;
             return (
               <g key={ch} transform={`translate(${cx} ${cy})`}>
-                <circle r={lampR} fill={on ? '#ffd76a' : '#26282c'} stroke={on ? '#fff3c4' : 'rgba(255,255,255,0.2)'} strokeWidth={3} filter={on ? 'url(#lampglow)' : undefined} />
-                <text y={14} textAnchor="middle" fontFamily={MONO} fontWeight={700} fontSize={36} fill={on ? '#2a1b00' : 'rgba(255,255,255,0.6)'}>
+                <circle r={lampR} fill={on ? '#E8DDC5' : '#26282c'} stroke={on ? '#AD9163' : 'rgba(232,221,197,0.2)'} strokeWidth={3} />
+                <text y={14} textAnchor="middle" fontFamily={MONO} fontWeight={700} fontSize={36} fill={on ? '#171817' : 'rgba(232,221,197,0.6)'}>
                   {ch}
                 </text>
               </g>
@@ -233,7 +226,7 @@ export const Tape: React.FC<{t: number; show: number; decode: number; red?: numb
   const plain = 'KEINE BESONDEREN EREIGNISSE';
   const offset = (t * 160) % 900;
   const strip = (y: number, content: string, color: string, shift: number) => (
-    <div style={{position: 'absolute', left: 0, right: 0, top: y, height: 130, background: '#e9e2cf', boxShadow: '0 20px 60px rgba(0,0,0,0.7)', overflow: 'hidden'}}>
+    <div style={{position: 'absolute', left: 0, right: 0, top: y, height: 130, background: '#E8DDC5', boxShadow: '0 20px 60px rgba(0,0,0,0.7)', overflow: 'hidden'}}>
       <div style={{position: 'absolute', top: 30, left: -shift, whiteSpace: 'nowrap', fontFamily: MONO, fontWeight: 700, fontSize: 64, color, letterSpacing: 8}}>
         {content}
       </div>
@@ -242,8 +235,8 @@ export const Tape: React.FC<{t: number; show: number; decode: number; red?: numb
   const shown = plain.slice(0, Math.round(plain.length * decode));
   return (
     <AbsoluteFill style={{opacity: show}}>
-      {strip(700, cipher + ' ' + cipher, red > 0 ? COLORS.red : '#1b1b1b', offset)}
-      <div style={{position: 'absolute', left: 0, right: 0, top: 900, height: 130, background: '#0b1622', border: `3px solid ${COLORS.gold}`, overflow: 'hidden', opacity: 1 - red}}>
+      {strip(700, cipher + ' ' + cipher, red > 0 ? COLORS.red : '#292824', offset)}
+      <div style={{position: 'absolute', left: 0, right: 0, top: 900, height: 130, background: '#171817', border: `3px solid ${COLORS.gold}`, overflow: 'hidden', opacity: 1 - red}}>
         <div style={{position: 'absolute', top: 30, left: 40, whiteSpace: 'nowrap', fontFamily: MONO, fontWeight: 700, fontSize: 56, color: COLORS.gold, letterSpacing: 4}}>
           {shown}
           <span style={{opacity: Math.floor(t * 4) % 2 ? 1 : 0}}>▌</span>

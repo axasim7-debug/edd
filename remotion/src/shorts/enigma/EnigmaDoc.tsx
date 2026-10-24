@@ -7,6 +7,28 @@ import {Arrow, Country, Flash, Grain, Pin, Route, Vignette, Wiring, shake} from 
 import {Backdrop, Doors, EnigmaMachine, NameTag, Panel, Tape, busyLamp, scene} from '../../lib/doc';
 import europe1938 from './data/europe_1938.json';
 import {DURATION} from './Enigma';
+import {SfxTrack, typing, type Cue} from '../../lib/sfx';
+
+const lampClicks = (a: number, b: number, rate: number, v: number): Cue[] =>
+  Array.from({length: Math.floor((b - a) * rate)}, (_, i) => [a + i / rate, 'key', v] as Cue);
+
+const SFX: Cue[] = [
+  [2.55, 'impact', 0.45],
+  [4.76, 'paper1', 0.3], [5.1, 'paper2', 0.3], [5.45, 'paper1', 0.3],
+  [9.7, 'ratchet', 0.35], ...lampClicks(9.8, 12.0, 4, 0.22), [10.5, 'ratchet', 0.3], [11.0, 'ratchet', 0.25], ...lampClicks(12.0, 14.6, 9, 0.14),
+  [14.75, 'paper2', 0.3],
+  [18.3, 'impact', 0.5],
+  ...typing(19.0, 26, 10, 0.16),
+  [22.0, 'paper1', 0.3], ...typing(23.0, 27, 12.3, 0.3),
+  [25.9, 'ratchet', 0.35], [26.1, 'ratchet', 0.45], [26.6, 'ratchet', 0.45], ...lampClicks(27.0, 29.9, 7, 0.14),
+  [31.6, 'air', 0.2], [33.3, 'pin', 0.45],
+  [36.0, 'string', 0.28], [36.5, 'string', 0.25], [38.5, 'string', 0.3], [41.7, 'paper2', 0.32],
+  [45.45, 'paper1', 0.32], [46.66, 'impact', 0.6],
+  [48.6, 'air', 0.2], [48.8, 'string', 0.25],
+  [53.0, 'paper2', 0.3], [55.5, 'paper1', 0.3], [59.45, 'paper1', 0.28], [61.0, 'paper1', 0.28],
+  [63.15, 'door', 0.55],
+  ...Array.from({length: 8}, (_, i) => [69.9 + i * 0.38, 'key', 0.45] as Cue),
+];
 
 const BORDERS = europe1938 as unknown as FeatureCollection;
 const POLAND = BORDERS.features.find((f) => f.properties?.name === 'Poland') as Feature;
@@ -70,7 +92,7 @@ export const EnigmaDoc: React.FC = () => {
   const endLamp = t >= 69.9 && litName > 0 && (t - 69.9) % 0.38 < 0.3 ? NAME[litName - 1] : null;
 
   return (
-    <AbsoluteFill style={{background: '#06090d'}}>
+    <AbsoluteFill style={{background: '#171817'}}>
       <Backdrop src={backdrop} show={1 - s.map} />
 
       <AbsoluteFill style={{transform: `translate(${sx}px, ${sy}px)`}}>
@@ -94,10 +116,8 @@ export const EnigmaDoc: React.FC = () => {
         {/* Pure maths: the wiring rebuilt */}
         <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
           <defs>
-            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="7" result="b" />
+            <filter id="glow">
               <feMerge>
-                <feMergeNode in="b" />
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
@@ -147,7 +167,7 @@ export const EnigmaDoc: React.FC = () => {
               <Arrow from={[16.2, 50.6]} to={[19.4, 51.5]} progress={ramp(t, 46.9, 47.8)} />
               <Arrow from={[19.9, 48.9]} to={[20.8, 50.4]} progress={ramp(t, 47.0, 47.9)} />
             </WorldMap>
-            <Panel src={A('invasion')} t={t} t0={45.4} show={ramp(t, 45.45, 45.8)} w={900} h={600} y={600} gray={1} tint="rgba(255,60,60,0.35)" zoomFrom={1.02} zoomTo={1.15} focus="50% 50%" />
+            <Panel src={A('invasion')} t={t} t0={45.4} show={ramp(t, 45.45, 45.8)} w={900} h={600} y={600} gray={1} tint="rgba(164,59,50,0.45)" zoomFrom={1.02} zoomTo={1.15} focus="50% 50%" />
           </AbsoluteFill>
         )}
 
@@ -181,6 +201,7 @@ export const EnigmaDoc: React.FC = () => {
       <Grain frame={frame} />
 
       <Audio src={staticFile('enigma/vo.wav')} />
+      <SfxTrack cues={SFX} />
     </AbsoluteFill>
   );
 };
