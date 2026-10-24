@@ -47,7 +47,7 @@ export const Pin: React.FC<{
   pulse?: number;
   size?: number;
   side?: 'left' | 'right';
-}> = ({at, label, sub, coords = true, color = COLORS.white, show, pulse = 0, size = 44, side}) => {
+}> = ({at, label, sub, coords = false, color = COLORS.white, show, pulse = 0, size = 44, side}) => {
   const p = useProjection();
   if (show <= 0) return null;
   const [x, y] = project(p, at);

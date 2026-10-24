@@ -1,7 +1,7 @@
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import type {Feature, FeatureCollection} from 'geojson';
 import {COLORS, WorldMap, cameraAt, project, ramp, useProjection, useSeconds, window_, type CamKey, type LonLat} from '../../lib/map';
-import {Arrow, BigWord, Country, Flash, Grain, PhotoCard, Pin, Route, Signal, Vignette, Wiring, pulseAt, shake} from '../../lib/overlays';
+import {Arrow, Country, Flash, Grain, PhotoCard, Pin, Route, Signal, Vignette, Wiring, pulseAt, shake} from '../../lib/overlays';
 import europe1938 from './data/europe_1938.json';
 
 // Layout rule: big word on top, photo cards in the band below it, and every
@@ -123,7 +123,7 @@ export const Enigma: React.FC = () => {
           <Pin at={P.berlin} label="Berlin" show={window_(t, 10.0, 12.6)} />
           <Pin at={P.berlin} label="Berlin" side="left" coords={false} color={t > 26.0 ? COLORS.red : COLORS.white} pulse={pulseAt(t, 26.0)} show={window_(t, 22.6, 31.4)} />
           <Pin at={P.warsaw} label="Warsaw" side="right" coords={false} show={window_(t, 22.6, 31.4)} />
-          <Pin at={P.pyry} label="Pyry Forest" sub="Secret meeting · July 1939" color={COLORS.gold} pulse={pulseAt(t, 33.4)} show={window_(t, 33.3, 35.5)} />
+          <Pin at={P.pyry} label="Pyry Forest" color={COLORS.gold} pulse={pulseAt(t, 33.4)} show={window_(t, 33.3, 35.5)} />
           <Pin at={P.london} label="London" coords={false} show={window_(t, 35.9, 43.5)} />
           <Pin at={P.paris} label="Paris" coords={false} show={window_(t, 36.4, 43.5)} />
           <Pin at={P.warsaw} label="Warsaw" coords={false} show={window_(t, 35.9, 43.5)} />
@@ -132,7 +132,7 @@ export const Enigma: React.FC = () => {
           <Pin at={P.bucharest} label="Romania" coords={false} show={window_(t, 49.5, 52.9)} />
           <Pin at={P.paris} label="France" coords={false} show={window_(t, 50.5, 52.9)} />
           <Pin at={P.bletchley} label="Bletchley Park" color={t > 59.5 && t < 61.0 ? COLORS.gold : COLORS.white} pulse={pulseAt(t, 59.6)} show={window_(t, 53.4, 63.8)} />
-          <Pin at={P.bydgoszcz} label="Home" sub="Bydgoszcz, Poland" show={window_(t, 66.0, 69.5)} />
+          <Pin at={P.bydgoszcz} label="Home" show={window_(t, 66.0, 69.5)} />
 
           {/* ---------- cards (card band) ---------- */}
           <PhotoCard src="enigma/art/turing.jpg" slot="center" size="portraitL" rotate={-3} show={window_(t, -1, 4.4)} anchor={P.bletchley} name="ALAN TURING" cross={ramp(t, 2.55, 3.1)} />
@@ -169,15 +169,6 @@ export const Enigma: React.FC = () => {
       <Vignette />
       <AbsoluteFill style={{background: '#000', opacity: 0.5 * window_(t, 68.6, 70.4, 0.4)}} />
 
-      {/* ---------- word band: one word at a time ---------- */}
-      <BigWord text="NOT" show={window_(t, 2.6, 4.3, 0.08)} color={COLORS.red} size={140} />
-      <BigWord text="7 YEARS EARLY" show={window_(t, 6.44, 8.0, 0.1)} />
-      <BigWord text="1932" show={window_(t, 8.1, 9.6, 0.08)} size={140} />
-      <BigWord text="UNBREAKABLE?" show={window_(t, 13.4, 14.7, 0.1)} />
-      <BigWord text="+2 ROTORS" show={window_(t, 26.0, 29.8, 0.1)} color={COLORS.red} />
-      <BigWord text="JULY 1939" show={window_(t, 31.8, 35.4, 0.1)} color={COLORS.gold} />
-      <BigWord text="5 WEEKS LATER" show={window_(t, 45.46, 48.7, 0.1)} />
-      <BigWord text="SILENT." show={window_(t, 68.8, 69.8, 0.1)} />
 
       <Flash t={t} at={2.6} color={COLORS.red} strength={0.25} />
       <Flash t={t} at={18.3} strength={0.5} />
