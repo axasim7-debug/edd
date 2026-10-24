@@ -9,7 +9,8 @@ const LENGTH: Record<SfxName, number> = {
 
 // Places one-shot effects on exact seconds. Volumes are deliberately low:
 // the narration always wins.
-export const SfxTrack: React.FC<{cues: Cue[]; gain?: number}> = ({cues, gain = 1}) => {
+// Master gain kept low after review: effects must sit well under the voice.
+export const SfxTrack: React.FC<{cues: Cue[]; gain?: number}> = ({cues, gain = 0.4}) => {
   const {fps} = useVideoConfig();
   return (
     <>

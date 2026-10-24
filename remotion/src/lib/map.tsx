@@ -67,11 +67,28 @@ export const cameraAt = (keys: CamKey[], t: number): Cam => {
   };
 };
 
-export const WorldMap: React.FC<{cam: Cam; borders?: FeatureCollection; children?: React.ReactNode}> = ({
+export type Theme = 'dark' | 'paper';
+const ThemeCtx = createContext<Theme>('dark');
+export const useTheme = () => useContext(ThemeCtx);
+
+// Ink-on-paper palette for the paper theme.
+export const PAPER = {
+  ink: '#292824',
+  red: '#A43B32',
+  brass: '#AD9163',
+  land: 'rgba(236, 226, 204, 0.92)',
+  water: 'rgba(119, 115, 108, 0.30)',
+  grid: 'rgba(41, 40, 36, 0.16)',
+  border: 'rgba(41, 40, 36, 0.5)',
+};
+
+export const WorldMap: React.FC<{cam: Cam; borders?: FeatureCollection; theme?: Theme; children?: React.ReactNode}> = ({
   cam,
   borders,
+  theme = 'dark',
   children,
 }) => {
+  const paper = theme === 'paper';
   const projection = useMemo(
     () =>
       geoMercator()
@@ -84,6 +101,7 @@ export const WorldMap: React.FC<{cam: Cam; borders?: FeatureCollection; children
   const path = geoPath(projection);
   const landD = path(cam.z > 5000 ? LAND_10 : LAND_50) ?? '';
   return (
+    <ThemeCtx.Provider value={theme}>
     <ProjectionCtx.Provider value={projection}>
       <svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
         <defs>
@@ -100,25 +118,40 @@ export const WorldMap: React.FC<{cam: Cam; borders?: FeatureCollection; children
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          <filter id="labelshadow" x="-20%" y="-40%" width="140%" height="200%">
+            <feDropShadow dx="2" dy="6" stdDeviation="5" floodColor="#000" floodOpacity="0.35" />
+          </filter>
           <filter id="softglow" x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur stdDeviation="14" />
           </filter>
           <pattern id="hatch-red" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <rect width="16" height="16" fill="rgba(164,59,50,0.30)" />
-            <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(164,59,50,0.55)" strokeWidth="4" />
+            <rect width="16" height="16" fill={paper ? 'rgba(164,59,50,0.16)' : 'rgba(164,59,50,0.30)'} />
+            <line x1="0" y1="0" x2="0" y2="16" stroke={paper ? 'rgba(164,59,50,0.6)' : 'rgba(164,59,50,0.55)'} strokeWidth={paper ? 3 : 4} />
           </pattern>
           <pattern id="hatch-white" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <rect width="16" height="16" fill="rgba(232,221,197,0.07)" />
-            <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(232,221,197,0.22)" strokeWidth="4" />
+            <rect width="16" height="16" fill={paper ? 'rgba(41,40,36,0.05)' : 'rgba(232,221,197,0.07)'} />
+            <line x1="0" y1="0" x2="0" y2="16" stroke={paper ? 'rgba(41,40,36,0.28)' : 'rgba(232,221,197,0.22)'} strokeWidth={paper ? 2.5 : 4} />
           </pattern>
         </defs>
-        <rect width={W} height={H} fill="url(#ocean)" />
-        <path d={path(GRATICULE) ?? ''} fill="none" stroke={COLORS.grid} strokeWidth={1.5} />
-        <path d={landD} fill="url(#land)" stroke={COLORS.coast} strokeWidth={1.6} />
-        {borders && <path d={path(borders) ?? ''} fill="none" stroke={COLORS.border} strokeWidth={1.4} />}
+        {paper ? (
+          <>
+            <rect width={W} height={H} fill={PAPER.water} />
+            <path d={path(GRATICULE) ?? ''} fill="none" stroke={PAPER.grid} strokeWidth={1.5} />
+            <path d={landD} fill={PAPER.land} stroke={PAPER.ink} strokeWidth={2.2} strokeLinejoin="round" />
+            {borders && <path d={path(borders) ?? ''} fill="none" stroke={PAPER.border} strokeWidth={1.6} strokeDasharray="7 5" />}
+          </>
+        ) : (
+          <>
+            <rect width={W} height={H} fill="url(#ocean)" />
+            <path d={path(GRATICULE) ?? ''} fill="none" stroke={COLORS.grid} strokeWidth={1.5} />
+            <path d={landD} fill="url(#land)" stroke={COLORS.coast} strokeWidth={1.6} />
+            {borders && <path d={path(borders) ?? ''} fill="none" stroke={COLORS.border} strokeWidth={1.4} />}
+          </>
+        )}
         {children}
       </svg>
     </ProjectionCtx.Provider>
+    </ThemeCtx.Provider>
   );
 };
 

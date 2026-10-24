@@ -1,9 +1,10 @@
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import type {Feature, FeatureCollection} from 'geojson';
-import {COLORS, WorldMap, cameraAt, project, ramp, useProjection, useSeconds, window_, type CamKey, type LonLat} from '../../lib/map';
+import {COLORS, WorldMap, type Theme, cameraAt, project, ramp, useProjection, useSeconds, window_, type CamKey, type LonLat} from '../../lib/map';
 import {Arrow, Country, Flash, Grain, PhotoCard, Pin, Route, Signal, Vignette, Wiring, pulseAt, shake} from '../../lib/overlays';
 import europe1938 from './data/europe_1938.json';
 import {SfxTrack, type Cue} from '../../lib/sfx';
+import {Lighting} from '../../lib/paper';
 
 // Layout rule: big word on top, photo cards in the band below it, and every
 // map focus point in the lower band (see LAYOUT in lib/map.tsx).
@@ -100,7 +101,8 @@ const PyryRing: React.FC<{t: number}> = ({t}) => {
   return <circle cx={x} cy={y} r={70 + 50 * ramp(t, 33.2, 34.4)} fill="rgba(255,201,74,0.10)" stroke={COLORS.gold} strokeWidth={3} strokeDasharray="10 10" opacity={show} />;
 };
 
-export const Enigma: React.FC = () => {
+export const Enigma: React.FC<{theme?: Theme}> = ({theme = 'dark'}) => {
+  const paper = theme === 'paper';
   const t = useSeconds();
   const frame = useCurrentFrame();
   const cam = cameraAt(CAMERA, t);
@@ -113,9 +115,9 @@ export const Enigma: React.FC = () => {
   const polandGold = window_(t, 69.8, DURATION + 1, 0.6);
 
   return (
-    <AbsoluteFill style={{background: COLORS.ocean}}>
+    <AbsoluteFill style={paper ? {backgroundColor: '#E8DDC5', backgroundImage: `url(${staticFile('paper/paper.jpg')})`, backgroundSize: '512px 512px'} : {background: COLORS.ocean}}>
       <AbsoluteFill style={{transform: `translate(${sx}px, ${sy}px)`}}>
-        <WorldMap cam={cam} borders={BORDERS}>
+        <WorldMap cam={cam} borders={BORDERS} theme={theme}>
           {/* ---------- map layer: outlines, routes, arrows ---------- */}
           <Country f={POLAND} draw={ramp(t, 4.6, 6.0)} fill={0.9} color={COLORS.white} hatch="white" opacity={polandWhite} />
           <Country f={POLAND} draw={ramp(t, 46.5, 47.2)} fill={1} color={COLORS.red} hatch="red" opacity={window_(t, 46.5, 48.8)} />
@@ -188,16 +190,20 @@ export const Enigma: React.FC = () => {
 
       {/* Rotor wiring, rebuilt "on paper" — takes the right card slot */}
       <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
-        <Wiring x={780} y={680} scale={0.48} show={window_(t, 19.0, 22.0)} progress={ramp(t, 19.0, 21.3, (x) => x)} />
+        <Wiring paper={paper} x={780} y={680} scale={0.48} show={window_(t, 19.0, 22.0)} progress={ramp(t, 19.0, 21.3, (x) => x)} />
       </svg>
 
-      <Vignette />
+      {paper ? <Lighting /> : <Vignette />}
       <AbsoluteFill style={{background: '#000', opacity: 0.5 * window_(t, 68.6, 70.4, 0.4)}} />
 
 
-      <Flash t={t} at={2.6} color={COLORS.red} strength={0.25} />
-      <Flash t={t} at={18.3} strength={0.5} />
-      <Flash t={t} at={46.66} color={COLORS.red} strength={0.35} />
+      {!paper && (
+        <>
+          <Flash t={t} at={2.6} color={COLORS.red} strength={0.25} />
+          <Flash t={t} at={18.3} strength={0.5} />
+          <Flash t={t} at={46.66} color={COLORS.red} strength={0.35} />
+        </>
+      )}
 
       <Grain frame={frame} />
 

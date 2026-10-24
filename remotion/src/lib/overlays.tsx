@@ -1,7 +1,21 @@
 import {Easing, interpolate, staticFile} from 'remotion';
 import type {Feature} from 'geojson';
 import {geoPath} from 'd3-geo';
-import {COLORS, LAYOUT, project, ramp, useProjection, type LonLat} from './map';
+import {COLORS, LAYOUT, PAPER, project, ramp, useProjection, useTheme, type LonLat} from './map';
+
+const TYPE = "'Special Elite', 'Courier Prime', monospace";
+
+// Maps the dark-theme colours onto ink colours when drawing on paper.
+const useInk = () => {
+  const paper = useTheme() === 'paper';
+  return (c: string) => {
+    if (!paper) return c;
+    if (c === COLORS.red) return PAPER.red;
+    if (c === COLORS.gold) return '#7a5a2a';
+    if (c === COLORS.blue) return '#4d4a44';
+    return PAPER.ink;
+  };
+};
 
 const FONT = 'Inter Display, Inter, sans-serif';
 const MONO = 'JetBrains Mono, monospace';
@@ -14,8 +28,9 @@ export const Country: React.FC<{
   color?: string;
   hatch?: 'red' | 'white';
   opacity?: number;
-}> = ({f, draw, fill, color = COLORS.white, hatch = 'white', opacity = 1}) => {
+}> = ({f, draw, fill, color: rawColor = COLORS.white, hatch = 'white', opacity = 1}) => {
   const p = useProjection();
+  const color = useInk()(rawColor);
   const d = geoPath(p)(f) ?? '';
   if (opacity <= 0 || (draw <= 0 && fill <= 0)) return null;
   return (
@@ -47,8 +62,10 @@ export const Pin: React.FC<{
   pulse?: number;
   size?: number;
   side?: 'left' | 'right';
-}> = ({at, label, sub, coords = false, color = COLORS.white, show, pulse = 0, size = 44, side}) => {
+}> = ({at, label, sub, coords = false, color: rawColor = COLORS.white, show, pulse = 0, size = 44, side}) => {
   const p = useProjection();
+  const paper = useTheme() === 'paper';
+  const color = useInk()(rawColor);
   if (show <= 0) return null;
   const [x, y] = project(p, at);
   const subText = sub ?? (coords ? `${at[1].toFixed(4)}° N, ${Math.abs(at[0]).toFixed(4)}° ${at[0] < 0 ? 'W' : 'E'}` : '');
@@ -64,15 +81,38 @@ export const Pin: React.FC<{
     <g opacity={show}>
       <g transform={`translate(${x} ${y}) scale(${pop})`}>
         {pulse > 0 && pulse < 1 && <circle r={12 + pulse * 90} fill="none" stroke={color} strokeWidth={4} opacity={1 - pulse} />}
-        <circle r={19} fill="none" stroke={color} strokeWidth={4} opacity={0.55} />
-        <circle r={9} fill={color} filter="url(#glow)" />
+        {paper ? (
+          <>
+            <circle r={15} fill="#E8DDC5" stroke={PAPER.ink} strokeWidth={4} />
+            <circle r={6} fill={color === PAPER.ink ? PAPER.red : color} />
+          </>
+        ) : (
+          <>
+            <circle r={19} fill="none" stroke={color} strokeWidth={4} opacity={0.55} />
+            <circle r={9} fill={color} filter="url(#glow)" />
+          </>
+        )}
       </g>
       {label && (
         <g transform={`translate(${x + nudge} ${y})`} opacity={ramp(show, 0.3, 1)}>
-          <polyline points={`${s * 14 - nudge},-14 ${s * 40},-40 ${s * (width - 10)},-40`} fill="none" stroke={color} strokeWidth={3} />
-          <text x={s * 50} y={-54} fill={color} fontFamily={FONT} fontWeight={900} fontSize={size} textAnchor={anchor} style={{letterSpacing: 1}}>
-            {label.toUpperCase()}
-          </text>
+          {paper ? (
+            <>
+              <line x1={s * 12 - nudge} y1={-12} x2={s * 40} y2={-40} stroke={PAPER.ink} strokeWidth={2.5} />
+              <g transform={`rotate(${s * -1.5})`}>
+                <rect x={s === 1 ? 34 : -34 - (label.length * size * 0.62 + 36)} y={-40 - size - 14} width={label.length * size * 0.62 + 36} height={size + 26} fill="#E8DDC5" stroke="rgba(41,40,36,0.25)" strokeWidth={1.5} filter="url(#labelshadow)" />
+                <text x={s * 52} y={-40 - 18} fill={color} fontFamily={TYPE} fontSize={size} textAnchor={anchor}>
+                  {label.toUpperCase()}
+                </text>
+              </g>
+            </>
+          ) : (
+            <>
+              <polyline points={`${s * 14 - nudge},-14 ${s * 40},-40 ${s * (width - 10)},-40`} fill="none" stroke={color} strokeWidth={3} />
+              <text x={s * 50} y={-54} fill={color} fontFamily={FONT} fontWeight={900} fontSize={size} textAnchor={anchor} style={{letterSpacing: 1}}>
+                {label.toUpperCase()}
+              </text>
+            </>
+          )}
           {subText && (
             <text x={s * 50} y={-12} fill="rgba(255,255,255,0.72)" fontFamily={MONO} fontSize={21} textAnchor={anchor}>
               {subText}
@@ -103,8 +143,9 @@ export const Route: React.FC<{
   dashed?: boolean;
   head?: boolean;
   opacity?: number;
-}> = ({path, progress, color = COLORS.white, bend = 0.15, width = 6, dashed = true, head = true, opacity = 1}) => {
+}> = ({path, progress, color: rawColor = COLORS.white, bend = 0.15, width = 6, dashed = true, head = true, opacity = 1}) => {
   const p = useProjection();
+  const color = useInk()(rawColor);
   if (progress <= 0 || opacity <= 0) return null;
   const pts = path.map((ll) => project(p, ll));
   const legs = pts.slice(1).map((b, i) => curve(pts[i], b, bend));
@@ -138,11 +179,12 @@ export const Arrow: React.FC<{from: LonLat; to: LonLat; progress: number; color?
   from,
   to,
   progress,
-  color = COLORS.red,
+  color: rawColor = COLORS.red,
   width = 44,
   bend = 0.12,
 }) => {
   const p = useProjection();
+  const color = useInk()(rawColor);
   if (progress <= 0) return null;
   const c = curve(project(p, from), project(p, to), bend);
   const steps = 40;
@@ -175,10 +217,11 @@ export const Signal: React.FC<{from: LonLat; to: LonLat; t: number; show: number
   to,
   t,
   show,
-  color = COLORS.blue,
+  color: rawColor = COLORS.blue,
   speed = 1.4,
 }) => {
   const p = useProjection();
+  const color = useInk()(rawColor);
   if (show <= 0) return null;
   const a = project(p, from);
   const b = project(p, to);
@@ -226,6 +269,7 @@ export const PhotoCard: React.FC<{
   cross?: number;
 }> = ({src, slot, size, show, rotate = 0, anchor, gray = 0, glow, name, cross = 0}) => {
   const p = useProjection();
+  const paper = useTheme() === 'paper';
   if (show <= 0) return null;
   const {x, y} = SLOT[slot];
   const {w, h} = SIZE[size];
@@ -239,6 +283,7 @@ export const PhotoCard: React.FC<{
       <defs>
         <filter id={id}>
           <feColorMatrix type="saturate" values={String(1 - gray)} />
+          {paper && <feColorMatrix type="matrix" values="0.36 0.70 0.18 0 0  0.32 0.64 0.16 0 0  0.25 0.50 0.12 0 0  0 0 0 1 0" />}
         </filter>
         <filter id="cardshadow" x="-30%" y="-30%" width="160%" height="160%">
           <feDropShadow dx="0" dy="18" stdDeviation="22" floodColor="#000" floodOpacity="0.75" />
@@ -254,7 +299,7 @@ export const PhotoCard: React.FC<{
         <rect x={-w / 2 - 12} y={-h / 2 - 12} width={w + 24} height={h + 24 + (name ? 50 : 0)} rx={8} fill="#E8DDC5" filter="url(#cardshadow)" />
         <image href={staticFile(src)} x={-w / 2} y={-h / 2} width={w} height={h} preserveAspectRatio="xMidYMid slice" filter={`url(#${id})`} />
         {name && (
-          <text x={0} y={h / 2 + 42} textAnchor="middle" fontFamily={FONT} fontWeight={800} fontSize={Math.min(32, (w + 10) / (name.length * 0.62))} fill="#1a1a1a" style={{letterSpacing: 1}}>
+          <text x={0} y={h / 2 + 42} textAnchor="middle" fontFamily={paper ? TYPE : FONT} fontWeight={paper ? 400 : 800} fontSize={Math.min(32, (w + 10) / (name.length * 0.62))} fill="#1a1a1a" style={{letterSpacing: 1}}>
             {name}
           </text>
         )}
@@ -306,7 +351,7 @@ export const BigWord: React.FC<{text: string; show: number; y?: number; size?: n
 };
 
 // Rotor wiring diagram: 26 contacts on each side, wires drawn one by one.
-export const Wiring: React.FC<{progress: number; show: number; x: number; y: number; scale?: number}> = ({progress, show, x, y, scale = 1}) => {
+export const Wiring: React.FC<{progress: number; show: number; x: number; y: number; scale?: number; paper?: boolean}> = ({progress, show, x, y, scale = 1, paper = false}) => {
   if (show <= 0) return null;
   // Wiring of the historical Enigma I rotor I: EKMFLGDQVZNTOWYHXUSPAIBRCJ.
   const map = 'EKMFLGDQVZNTOWYHXUSPAIBRCJ';
@@ -314,7 +359,7 @@ export const Wiring: React.FC<{progress: number; show: number; x: number; y: num
   const top = -12.5 * gap;
   return (
     <g opacity={show} transform={`translate(${x} ${y}) scale(${scale})`}>
-      <rect x={-300} y={top - 60} width={600} height={26 * gap + 90} rx={24} fill="rgba(7,17,27,0.82)" stroke="rgba(63,180,255,0.5)" strokeWidth={3} />
+      <rect x={-300} y={top - 60} width={600} height={26 * gap + 90} rx={paper ? 4 : 24} fill={paper ? "#E8DDC5" : "rgba(7,17,27,0.82)"} stroke={paper ? "rgba(41,40,36,0.3)" : "rgba(63,180,255,0.5)"} strokeWidth={3} filter={paper ? "url(#labelshadow)" : undefined} />
       {Array.from({length: 26}, (_, i) => {
         const j = map.charCodeAt(i) - 65;
         const k = Math.max(0, Math.min(1, progress * 26 - i));
@@ -324,15 +369,15 @@ export const Wiring: React.FC<{progress: number; show: number; x: number; y: num
         const ym = y1 + (y2 - y1) * k;
         return (
           <g key={i}>
-            <text x={-250} y={y1 + 9} fill="rgba(255,255,255,0.75)" fontFamily={MONO} fontSize={24} textAnchor="middle">
+            <text x={-250} y={y1 + 9} fill={paper ? PAPER.ink : "rgba(255,255,255,0.75)"} fontFamily={paper ? TYPE : MONO} fontSize={24} textAnchor="middle">
               {String.fromCharCode(65 + i)}
             </text>
-            <text x={250} y={y1 + 9} fill="rgba(255,255,255,0.75)" fontFamily={MONO} fontSize={24} textAnchor="middle">
+            <text x={250} y={y1 + 9} fill={paper ? PAPER.ink : "rgba(255,255,255,0.75)"} fontFamily={paper ? TYPE : MONO} fontSize={24} textAnchor="middle">
               {String.fromCharCode(65 + i)}
             </text>
-            <circle cx={-200} cy={y1} r={6} fill={COLORS.blue} />
-            <circle cx={200} cy={y1} r={6} fill={COLORS.blue} />
-            {k > 0 && <line x1={-200} y1={y1} x2={xm} y2={ym} stroke={k < 1 ? COLORS.gold : COLORS.blue} strokeWidth={3} filter="url(#glow)" />}
+            <circle cx={-200} cy={y1} r={6} fill={paper ? PAPER.ink : COLORS.blue} />
+            <circle cx={200} cy={y1} r={6} fill={paper ? PAPER.ink : COLORS.blue} />
+            {k > 0 && <line x1={-200} y1={y1} x2={xm} y2={ym} stroke={paper ? (k < 1 ? PAPER.red : PAPER.ink) : k < 1 ? COLORS.gold : COLORS.blue} strokeWidth={paper ? 2 : 3} filter="url(#glow)" />}
           </g>
         );
       })}
