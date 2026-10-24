@@ -82,10 +82,11 @@ export const PAPER = {
   border: 'rgba(41, 40, 36, 0.5)',
 };
 
-export const WorldMap: React.FC<{cam: Cam; borders?: FeatureCollection; theme?: Theme; children?: React.ReactNode}> = ({
+export const WorldMap: React.FC<{cam: Cam; borders?: FeatureCollection; theme?: Theme; focusY?: number; children?: React.ReactNode}> = ({
   cam,
   borders,
   theme = 'dark',
+  focusY = LAYOUT.focusY,
   children,
 }) => {
   const paper = theme === 'paper';
@@ -94,9 +95,9 @@ export const WorldMap: React.FC<{cam: Cam; borders?: FeatureCollection; theme?: 
       geoMercator()
         .center([cam.c[0], cam.c[1]])
         .scale(cam.z)
-        .translate([W / 2, LAYOUT.focusY])
+        .translate([W / 2, focusY])
         .clipExtent([[-200, -200], [W + 200, H + 200]]),
-    [cam.c[0], cam.c[1], cam.z],
+    [cam.c[0], cam.c[1], cam.z, focusY],
   );
   const path = geoPath(projection);
   const landD = path(cam.z > 5000 ? LAND_10 : LAND_50) ?? '';

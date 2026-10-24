@@ -6,13 +6,13 @@ import json, sys, time, urllib.parse, urllib.request
 
 UA = 'EddShortsBot/1.0 (https://github.com/axasim7-debug/edd)'
 
-def get(url, tries=6):
+def get(url, tries=8):
     for i in range(tries):
         try:
             req = urllib.request.Request(url, headers={'User-Agent': UA})
             return urllib.request.urlopen(req, timeout=60).read()
         except Exception as e:
-            time.sleep(3 * (i + 1))
+            time.sleep(6 * (i + 1))
     raise RuntimeError(url)
 
 def api(**params):
@@ -25,6 +25,8 @@ cpath = f'{out}/credits.json'
 credits = json.load(open(cpath)) if os.path.exists(cpath) else {}
 for arg in sys.argv[2:]:
     name, query = arg.split('=', 1)
+    if os.path.exists(f'{out}/{name}.jpg') and os.path.getsize(f'{out}/{name}.jpg') > 0:
+        continue  # already downloaded
     # An exact 'File:...' title skips the search.
     hits = [{'title': query}] if query.startswith('File:') else api(action='query', list='search', srnamespace=6, srlimit=5, srsearch=query)['query']['search']
     for h in hits:
@@ -42,4 +44,4 @@ for arg in sys.argv[2:]:
     credits[name] = {'title': title, 'page': page['descriptionurl'], 'license': lic}
     print(name, '<-', title, '|', lic)
     json.dump(credits, open(cpath, 'w'), indent=1, ensure_ascii=False)
-    time.sleep(2)
+    time.sleep(6)
