@@ -39,6 +39,8 @@ yt-dlp --skip-download --write-auto-subs --sub-langs en-orig --sub-format vtt -o
 cp <recording>.wav remotion/public/<slug>/vo.wav
 python3 tools/transcribe.py public/<slug>/vo.wav > src/shorts/<slug>/words.json
 ```
+صوت بالعربي: `LANG_CODE=ar MODEL=medium python3 tools/transcribe.py ...` ثم صحّح الإملاء في words.json، واستخدم `src/lib/arabic.tsx` (ArTyped / ArNote / ArStamp) للنصوص — مثال: `src/shorts/horizon/`.
+
 **كل توقيت في المونتاج يُؤخذ من words.json** (لا تقدير). مثال: الكلمة "NOT" عند 2.6ث → الصليب الأحمر يبدأ 2.55ث.
 
 ## 4. المواد
