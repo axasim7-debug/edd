@@ -7,6 +7,9 @@ import {ChernobylCut, DURATION as CUT_DURATION} from './shorts/chernobyl/Chernob
 import {HorizonCut} from './shorts/horizon/HorizonCut';
 import {HorizonDoc} from './shorts/horizon/HorizonDoc';
 import {HorizonAnimatic} from './shorts/horizon/HorizonAnimatic';
+import {HorizonMath} from './shorts/horizon/HorizonMath';
+import {HorizonFlat} from './shorts/horizon/HorizonFlat';
+import {HorizonCinema, HorizonHybrid} from './shorts/horizon/HorizonCinema';
 import {HorizonPaper, DURATION as HORIZON_DURATION} from './shorts/horizon/HorizonPaper';
 
 export const Root: React.FC = () => (
@@ -22,5 +25,9 @@ export const Root: React.FC = () => (
     <Composition id="HorizonCut" component={HorizonCut} width={1080} height={1920} fps={30} durationInFrames={Math.round(HORIZON_DURATION * 30)} />
     <Composition id="HorizonDoc" component={HorizonDoc} width={1080} height={1920} fps={30} durationInFrames={Math.round(HORIZON_DURATION * 30)} />
     <Composition id="HorizonAnimatic" component={HorizonAnimatic} width={1080} height={1920} fps={30} durationInFrames={Math.round(HORIZON_DURATION * 30)} />
+    <Composition id="HorizonMath" component={HorizonMath} width={1080} height={1920} fps={30} durationInFrames={Math.round(HORIZON_DURATION * 30)} />
+    <Composition id="HorizonFlat" component={HorizonFlat} width={1080} height={1920} fps={30} durationInFrames={Math.round(HORIZON_DURATION * 30)} />
+    <Composition id="HorizonCinema" component={HorizonCinema} width={1080} height={1920} fps={30} durationInFrames={Math.round(HORIZON_DURATION * 30)} />
+    <Composition id="HorizonHybrid" component={HorizonHybrid} width={1080} height={1920} fps={30} durationInFrames={Math.round(HORIZON_DURATION * 30)} />
   </>
 );
