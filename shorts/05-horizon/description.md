@@ -12,6 +12,7 @@
 #ثقب_أسود #فيزياء #النسبية_العامة #blackhole #shorts
 
 ## Credits
+- Black hole simulations (version 3, HorizonDoc): NASA's Goddard Space Flight Center / J. Schnittman and B. Powell — https://svs.gsfc.nasa.gov/14576 (plunge, fly-by) and https://svs.gsfc.nasa.gov/13326 (accretion disk). NASA media; credit required. Original soundtracks not used.
 - M87* image: Event Horizon Telescope Collaboration — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:Black_hole_-_Messier_87_crop_max_res.jpg
 - Albert Einstein (1947, Orren Jack Turner) — public domain — https://commons.wikimedia.org/wiki/File:Albert_Einstein_Head.jpg
 - Karl Schwarzschild — public domain — https://commons.wikimedia.org/wiki/File:Karl_schwarzschild.portrait.jpg
