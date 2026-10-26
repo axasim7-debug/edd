@@ -12,6 +12,8 @@
 #ثقب_أسود #فيزياء #النسبية_العامة #blackhole #shorts
 
 ## Credits
+- Milky Way panorama (cinema/hybrid versions, lensed by the black hole): ESO/S. Brunier — CC BY 4.0 — https://www.eso.org/public/images/eso0932a/
+- The lensing, light paths, funnel and light cones are computed from the Schwarzschild metric (illustrations, not observations).
 - Astronaut (animatic version): Bruce McCandless II, STS-41-B EVA, 1984 — NASA, public domain — https://commons.wikimedia.org/wiki/File:Bruce_McCandless_II_during_EVA_in_1984.jpg
 - Animatic drawings are generated from the NASA simulations above (redrawn as pencil/charcoal).
 - Black hole simulations (version 3, HorizonDoc): NASA's Goddard Space Flight Center / J. Schnittman and B. Powell — https://svs.gsfc.nasa.gov/14576 (plunge, fly-by) and https://svs.gsfc.nasa.gov/13326 (accretion disk). NASA media; credit required. Original soundtracks not used.
