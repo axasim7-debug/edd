@@ -23,3 +23,6 @@ Recording: `remotion/public/horizon/vo.wav`; word timings: `remotion/src/shorts/
 Music is mixed after the Remotion render, side-chain ducked under the voice:
 `ffmpeg -i out/HorizonViral.mp4 -ss 199.6 -i Echoes_of_Time_v2.mp3 -i public/horizon/vo.wav -filter_complex "[1:a]atrim=0:61.8,asetpts=PTS-STARTPTS,aresample=48000,volume=0.16,afade=t=in:d=0.3,afade=t=out:st=59.6:d=2.2[m];[2:a]aresample=48000,volume=2.0[k];[m][k]sidechaincompress=threshold=0.012:ratio=8:attack=10:release=450:makeup=1[md];[0:a]aresample=48000[v];[v][md]amix=inputs=2:normalize=0:duration=first[a]" -map 0:v -map "[a]" -c:v copy -c:a aac out/HorizonViral-mix.mp4`, then `tools/master.sh`.
 Source media not in git (large): NASA SVS 14576/13326 clips (tools/horizon_clips.py), spacewalk videos from images.nasa.gov, Poly Haven tonemapped JPGs, ESO eso0932a panorama.
+
+## Audio mix (Pro version — owner's rule: no ducking)
+Constant low music bed, no side-chain: `ffmpeg -i out/HorizonPro.mp4 -ss 199.6 -i Echoes_of_Time_v2.mp3 -filter_complex "[1:a]atrim=0:61.8,asetpts=PTS-STARTPTS,aresample=48000,volume=0.034,afade=t=in:d=0.3,afade=t=out:st=59.6:d=2.2[m];[0:a]aresample=48000[v];[v][m]amix=inputs=2:normalize=0:duration=first[a]" -map 0:v -map "[a]" -c:v copy -c:a aac out/HorizonPro-mix.mp4`, then `tools/master.sh`. Voice stays ≥16 dB above the music.
