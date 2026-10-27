@@ -10,6 +10,7 @@ import {HorizonAnimatic} from './shorts/horizon/HorizonAnimatic';
 import {HorizonMath} from './shorts/horizon/HorizonMath';
 import {HorizonFlat} from './shorts/horizon/HorizonFlat';
 import {HorizonCinema, HorizonHybrid} from './shorts/horizon/HorizonCinema';
+import {HorizonViral} from './shorts/horizon/HorizonViral';
 import {HorizonPaper, DURATION as HORIZON_DURATION} from './shorts/horizon/HorizonPaper';
 
 export const Root: React.FC = () => (
@@ -29,5 +30,6 @@ export const Root: React.FC = () => (
     <Composition id="HorizonFlat" component={HorizonFlat} width={1080} height={1920} fps={30} durationInFrames={Math.round(HORIZON_DURATION * 30)} />
     <Composition id="HorizonCinema" component={HorizonCinema} width={1080} height={1920} fps={30} durationInFrames={Math.round(HORIZON_DURATION * 30)} />
     <Composition id="HorizonHybrid" component={HorizonHybrid} width={1080} height={1920} fps={30} durationInFrames={Math.round(HORIZON_DURATION * 30)} />
+    <Composition id="HorizonViral" component={HorizonViral} width={1080} height={1920} fps={30} durationInFrames={Math.round(HORIZON_DURATION * 30)} />
   </>
 );

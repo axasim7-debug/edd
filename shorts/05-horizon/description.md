@@ -12,6 +12,9 @@
 #ثقب_أسود #فيزياء #النسبية_العامة #blackhole #shorts
 
 ## Credits
+- Music (viral version): "Echoes of Time v2" Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 4.0 — http://creativecommons.org/licenses/by/4.0/
+- 360° photos (black hole over real places): Poly Haven (CC0) — shanghai_bund, dikhololo_night, hansaplatz — https://polyhaven.com/hdris
+- Spacewalk footage: NASA (public domain) — "Celebrating 20 Years of Space Station Spacewalks" (jsc2021m000187) and "Spacewalk 101" (jsc2026m000932), images.nasa.gov
 - Milky Way panorama (cinema/hybrid versions, lensed by the black hole): ESO/S. Brunier — CC BY 4.0 — https://www.eso.org/public/images/eso0932a/
 - The lensing, light paths, funnel and light cones are computed from the Schwarzschild metric (illustrations, not observations).
 - Astronaut (animatic version): Bruce McCandless II, STS-41-B EVA, 1984 — NASA, public domain — https://commons.wikimedia.org/wiki/File:Bruce_McCandless_II_during_EVA_in_1984.jpg
